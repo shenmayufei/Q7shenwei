@@ -125,4 +125,5 @@
     <string name="clicked_on_weighing">点击了称重</string>
     <string name="clicked_on_the_volume">点击了体积</string>
     <string name="clicked_on_the_photo">点击了拍照</string>
+    <string name="please_enter">请输入用户名及密码</string>
 </resources>

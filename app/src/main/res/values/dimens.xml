@@ -417,4 +417,5 @@
     <dimen name="dp_370">370dp</dimen>
     <dimen name="dp_460">460dp</dimen>
     <dimen name="dp_480">480dp</dimen>
+    <dimen name="sp50">50sp</dimen>
 </resources>

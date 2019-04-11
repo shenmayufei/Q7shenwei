@@ -124,4 +124,5 @@
     <string name="clicked_on_weighing">Clicked on weighing</string>
     <string name="clicked_on_the_volume">Clicked on the volume</string>
     <string name="clicked_on_the_photo">Clicked on the photo</string>
+    <string name="please_enter">Please enter your username and password</string>
 </resources>

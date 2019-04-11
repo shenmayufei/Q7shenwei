@@ -8,4 +8,17 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--activity进出动画-->
+    <style name="Animation">
+        <item name="android:activityOpenEnterAnimation">@anim/in_from_right</item>
+        <item name="android:activityOpenExitAnimation">@anim/in_from_right_bit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/out_to_right_bit</item>
+        <item name="android:activityCloseExitAnimation">@anim/out_to_right</item>
+    </style>
+
+    <style name="LoginEdit" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">#99ffffff</item>
+        <item name="colorControlActivated">#99ffffff</item>
+    </style>
+
 </resources>
