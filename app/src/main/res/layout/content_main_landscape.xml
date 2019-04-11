@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.spd.qsevendemo.MainActivity">
+
+    <com.imi.measure.view.GLPanel
+        android:id="@+id/gl_main_cal"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="4:3"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/gl_main_result"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <ImageView
+        android:id="@+id/iv_main_drawer"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@mipmap/icon_more"
+        app:layout_constraintStart_toStartOf="@+id/switch_main_unit"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="15dp"
+        android:scaleType="centerCrop"/>
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/switch_main_unit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/gl_main_cal"
+        app:layout_constraintBottom_toBottomOf="@+id/gl_main_cal"
+        app:layout_constraintStart_toStartOf="@+id/gl_main_cal"
+        android:layout_marginStart="5dp"
+        android:visibility="visible"/>
+
+    <ImageView
+        android:id="@+id/iv_main_camera"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@mipmap/iv_main_camera"
+        android:scaleType="centerInside"
+        android:padding="15dp"
+        app:layout_constraintDimensionRatio="4:3"
+        app:layout_constraintTop_toTopOf="@+id/gl_main_cal"
+        app:layout_constraintStart_toStartOf="@+id/gl_main_cal"
+        app:layout_constraintEnd_toEndOf="@+id/gl_main_cal"
+        app:layout_constraintBottom_toBottomOf="@+id/gl_main_cal"/>
+
+    <View
+        android:layout_width="25dp"
+        android:layout_height="2dp"
+        app:layout_constraintStart_toStartOf="@+id/iv_main_camera"
+        app:layout_constraintEnd_toEndOf="@+id/iv_main_camera"
+        app:layout_constraintTop_toTopOf="@+id/iv_main_camera"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_main_camera"
+        android:background="@android:color/white"/>
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="25dp"
+        app:layout_constraintStart_toStartOf="@+id/iv_main_camera"
+        app:layout_constraintEnd_toEndOf="@+id/iv_main_camera"
+        app:layout_constraintTop_toTopOf="@+id/iv_main_camera"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_main_camera"
+        android:background="@android:color/white"/>
+
+    <TextView
+        android:id="@+id/tv_main_slogan"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@+id/gl_main_cal"
+        app:layout_constraintEnd_toEndOf="@+id/gl_main_cal"
+        app:layout_constraintTop_toBottomOf="@+id/iv_main_camera"
+        app:layout_constraintBottom_toBottomOf="@+id/gl_main_cal"
+        android:text="请尽量将物体填满识别框"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:alpha="0.5"/>
+    <ImageView
+        android:id="@+id/iv_main_result"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@mipmap/failure"
+        android:scaleType="center"
+        android:background="@android:color/black"
+        app:layout_constraintDimensionRatio="4:3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"/>
+
+    <com.imi.measure.view.GLPanel
+        android:id="@+id/gl_main_result"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="4:3"
+        app:layout_constraintTop_toBottomOf="@id/gl_main_cal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <ImageView
+        android:id="@+id/iv_main_failure"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@mipmap/failure"
+        android:scaleType="fitCenter"
+        app:layout_constraintTop_toTopOf="@+id/gl_main_result"
+        app:layout_constraintBottom_toBottomOf="@+id/gl_main_result"
+        app:layout_constraintStart_toStartOf="@+id/gl_main_result"
+        app:layout_constraintEnd_toEndOf="@+id/gl_main_result"/>
+
+    <com.imi.measure.view.TitleView
+        android:id="@+id/title_main_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toEndOf="@id/gl_main_cal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <Button
+        android:id="@+id/btn_main_cal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="计算体积"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@android:color/white"
+        android:background="@null"/>
+
+</android.support.constraint.ConstraintLayout>

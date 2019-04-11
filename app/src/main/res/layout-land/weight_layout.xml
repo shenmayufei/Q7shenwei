@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".weight.WeightActivity"
+    tools:ignore="MissingDefaultResource">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/kg_0"
+        android:textSize="41sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etd_weight"
+            android:layout_width="match_parent"
+            android:layout_height="93dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="0000"
+            android:inputType="numberDecimal"
+            android:maxLength="4" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1.9"
+            android:text="."
+            android:textSize="60sp" />
+
+        <EditText
+            android:id="@+id/etd_weight2"
+            android:layout_width="match_parent"
+            android:layout_height="93dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="00"
+            android:inputType="numberDecimal"
+            android:maxLength="2" />
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/tv_show"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/Display_weight"
+        android:textSize="80sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/kg"
+        android:textSize="25sp" />
+
+    <LinearLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+
+            android:id="@+id/btn_zhengchang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="打开"
+            android:textSize="35sp" />
+
+        <Button
+
+            android:id="@+id/qupi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="去皮"
+            android:textSize="35sp" />
+
+        <Button
+            android:id="@+id/zhiling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="置零"
+            android:textSize="35sp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_zuida"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Maximum_range"
+            android:textSize="35sp" />
+
+        <Button
+            android:id="@+id/btn_biaoling"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Zero"
+            android:textSize="35sp" />
+
+        <Button
+            android:id="@+id/btn_jiaozheng"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/Correction"
+            android:textSize="35sp" />
+    </LinearLayout>
+</LinearLayout>

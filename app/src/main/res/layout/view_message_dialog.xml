@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/dp_103"
+        android:layout_marginStart="@dimen/dp_103"
+        android:layout_marginTop="@dimen/dp_25"
+        android:gravity="center"
+        android:text="提示"
+        android:textColor="@color/colorDialogBlack"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@id/scroll_main_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ScrollView
+        android:id="@+id/scroll_main_content"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:minWidth="@dimen/dp_250"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@+id/view_dialog_row"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_dialog_title">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/tv_dialog_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:typeface="normal"
+                android:text=""
+                android:textColor="@color/colorDialogBlack"
+                android:textSize="14sp"/>
+
+            <ProgressBar
+                android:id="@+id/progress_message_loading"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
+        </RelativeLayout>
+
+    </ScrollView>
+
+    <View
+        android:id="@+id/view_dialog_row"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/colorGray"
+        app:layout_constraintBottom_toTopOf="@+id/btn_dialog_positive"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scroll_main_content"/>
+
+    <Button
+        android:id="@+id/btn_dialog_positive"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dp_40"
+        android:background="@null"
+        android:text="确定"
+        android:textColor="@color/colorDialogBlue"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/view_dialog_col"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view_dialog_row"/>
+
+    <View
+        android:id="@+id/view_dialog_col"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:background="@color/colorGray"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_dialog_positive"
+        app:layout_constraintEnd_toStartOf="@+id/btn_dialog_negative"
+        app:layout_constraintStart_toEndOf="@+id/btn_dialog_positive"
+        app:layout_constraintTop_toTopOf="@+id/btn_dialog_positive"/>
+
+    <Button
+        android:id="@+id/btn_dialog_negative"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:text="取消"
+        android:textColor="@color/colorDialogGray"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_dialog_positive"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/view_dialog_col"
+        app:layout_constraintTop_toTopOf="@id/btn_dialog_positive"/>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <com.spd.qsevendemo.view.CustomToolBar
+        android:id="@+id/title_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_one"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="2dp"
+        android:orientation="horizontal"
+        android:padding="3dp">
+
+
+        <RelativeLayout
+            android:id="@+id/ll_add_one"
+            android:layout_width="0dp"
+            android:layout_marginEnd="3dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+            <SurfaceView
+                android:id="@+id/surfaceView1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:ignore="NestedWeights" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_marginStart="3dp"
+            android:id="@+id/ll_add_two"
+            android:layout_width="0dp"
+            android:layout_marginEnd="3dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+
+            <com.spd.qsevendemo.measure.view.GLPanel
+                android:id="@+id/gl_main_cal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <ImageView
+                android:id="@+id/iv_main_camera"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="160dp"
+                android:layout_marginEnd="35dp"
+                android:layout_marginStart="35dp"
+                android:layout_marginBottom="30dp"
+                android:src="@mipmap/iv_main_camera" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/dp2"
+            android:id="@+id/ll_two"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <com.spd.qsevendemo.view.WorklistShow
+                android:id="@+id/work_one"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="@dimen/dp2"
+                android:layout_weight="1" />
+
+            <com.spd.qsevendemo.view.TijiShow
+                android:id="@+id/work_two"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="@dimen/dp2"
+                android:layout_weight="1" />
+
+            <com.spd.qsevendemo.view.WorklistShow
+                android:id="@+id/work_three"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="@dimen/dp2"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

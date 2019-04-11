@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:showIn="navigation_view">
+
+    <group  android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_license_info"
+            android:icon="@mipmap/icon_license"
+            android:title="授权信息"/>
+        <item
+            android:id="@+id/nav_version_info"
+            android:icon="@mipmap/icon_version"
+            android:title="版本信息"/>
+        <item
+            android:id="@+id/nav_height_calibration"
+            android:icon="@mipmap/icon_height"
+            android:title="高度校准"/>
+    </group>
+
+</menu>
