@@ -33,11 +33,11 @@ public class DatabaseAction {
     /**
      * 保存data
      *
-     * @param handoverList 入库交接任务
+     * @param dataBean 数据
      */
-    public static void saveData(List<DataBean> handoverList) {
+    public static void saveData(DataBean dataBean) {
         DatabaseManager.getInstance().getDao()
-                .getDataBeanDao().insertOrReplaceInTx(handoverList);
+                .getDataBeanDao().insert(dataBean);
     }
 
     /**
@@ -46,7 +46,9 @@ public class DatabaseAction {
      * @return 要展示的内容
      */
     public static List<DataBean> queryData() {
-        return DatabaseManager.getInstance().getDao().getDataBeanDao().queryBuilder().list();
+
+        return DatabaseManager.getInstance().getDao().getDataBeanDao().loadAll();
+
     }
 
 

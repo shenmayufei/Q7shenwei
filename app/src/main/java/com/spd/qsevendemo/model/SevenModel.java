@@ -26,4 +26,7 @@ public class SevenModel {
     public static final String WEIGHT_SET = "WEIGHT_SET";
     public static final String HEIGHT_SET = "HEIGHT_SET";
     public static final String PHOTO_SET = "PHOTO_SET";
+
+    //称重是否稳定
+    public static final String WEIGHT_STABLE = "WEIGHT_STABLE";
 }

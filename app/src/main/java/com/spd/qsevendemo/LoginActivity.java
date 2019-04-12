@@ -21,6 +21,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import static com.spd.qsevendemo.model.LoginModel.LOGIN_IS_MANAGER;
+
 /**
  * @author xuyan 神威登录界面
  */
@@ -52,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
     /**
-     * 预留的网络连接方法
+     * 预留的登陆请求网络连接方法，暂时不用
      */
     public void checkUpdate() {
         Logcat.d("checkUpdate");
@@ -62,7 +64,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         HashMap<String, String> params = new HashMap<>();
         params.put("versionNumber", code);
         params.put("apkName", name);
-
 
         NetApi.getInstance().checkUpdate2(params).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<UpdateResult>() {
@@ -96,13 +97,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String username = mUsername.getText().toString();
                 String password = mPassword.getText().toString();
 
-                //判断登陆
-                startActivity(new Intent(LoginActivity.this, FirstActivity.class));
+                if ("sw".equals(username) && "swsf0416".equals(password)) {
+                    //记录状态并登陆
+                    SpUtils.put(AppSeven.getInstance(), LOGIN_IS_MANAGER, true);
+                    startActivity(new Intent(LoginActivity.this, FirstActivity.class));
+                } else {
+                    ToastUtils.showLongToastSafe(R.string.user_name_password);
+                }
             } else {
                 ToastUtils.showLongToastSafe(R.string.please_enter);
             }
         } else if (v.getId() == R.id.login_noaccount) {
-            //不判断登陆
+            //记录状态并登陆
+            SpUtils.put(AppSeven.getInstance(), LOGIN_IS_MANAGER, false);
             startActivity(new Intent(LoginActivity.this, FirstActivity.class));
         }
     }

@@ -237,7 +237,7 @@ public class EndWindow extends PopupWindow {
             }
         });
 
-        if ((boolean) SpUtils.get(AppSeven.getInstance(), HEIGHT_SET, true)) {
+        if ((boolean) SpUtils.get(AppSeven.getInstance(), HEIGHT_SET, false)) {
             mOption3.setText(AppSeven.getInstance().getString(R.string.volume_on));
         } else {
             mOption3.setText(AppSeven.getInstance().getString(R.string.volume_off));
@@ -245,7 +245,7 @@ public class EndWindow extends PopupWindow {
 
         mOption3.setOnClickListener(v -> {
             //每个都是设置属性，然后用的时候再判断
-            if ((boolean) SpUtils.get(AppSeven.getInstance(), HEIGHT_SET, true)) {
+            if ((boolean) SpUtils.get(AppSeven.getInstance(), HEIGHT_SET, false)) {
                 mOption3.setText(AppSeven.getInstance().getString(R.string.volume_off));
                 SpUtils.put(AppSeven.getInstance(), HEIGHT_SET, false);
             } else {

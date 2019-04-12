@@ -25,7 +25,8 @@ public class DataBeanDao extends AbstractDao<DataBean, Long> {
         public final static Property Barcode = new Property(0, String.class, "barcode", false, "BARCODE");
         public final static Property Weight = new Property(1, String.class, "weight", false, "WEIGHT");
         public final static Property Tiji = new Property(2, String.class, "tiji", false, "TIJI");
-        public final static Property Time = new Property(3, long.class, "time", true, "_id");
+        public final static Property Count = new Property(3, String.class, "count", false, "COUNT");
+        public final static Property Time = new Property(4, long.class, "time", true, "_id");
     }
 
 
@@ -44,7 +45,8 @@ public class DataBeanDao extends AbstractDao<DataBean, Long> {
                 "\"BARCODE\" TEXT," + // 0: barcode
                 "\"WEIGHT\" TEXT," + // 1: weight
                 "\"TIJI\" TEXT," + // 2: tiji
-                "\"_id\" INTEGER PRIMARY KEY NOT NULL );"); // 3: time
+                "\"COUNT\" TEXT," + // 3: count
+                "\"_id\" INTEGER PRIMARY KEY NOT NULL );"); // 4: time
     }
 
     /** Drops the underlying database table. */
@@ -71,7 +73,12 @@ public class DataBeanDao extends AbstractDao<DataBean, Long> {
         if (tiji != null) {
             stmt.bindString(3, tiji);
         }
-        stmt.bindLong(4, entity.getTime());
+ 
+        String count = entity.getCount();
+        if (count != null) {
+            stmt.bindString(4, count);
+        }
+        stmt.bindLong(5, entity.getTime());
     }
 
     @Override
@@ -92,12 +99,17 @@ public class DataBeanDao extends AbstractDao<DataBean, Long> {
         if (tiji != null) {
             stmt.bindString(3, tiji);
         }
-        stmt.bindLong(4, entity.getTime());
+ 
+        String count = entity.getCount();
+        if (count != null) {
+            stmt.bindString(4, count);
+        }
+        stmt.bindLong(5, entity.getTime());
     }
 
     @Override
     public Long readKey(Cursor cursor, int offset) {
-        return cursor.getLong(offset + 3);
+        return cursor.getLong(offset + 4);
     }    
 
     @Override
@@ -106,7 +118,8 @@ public class DataBeanDao extends AbstractDao<DataBean, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // barcode
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // weight
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // tiji
-            cursor.getLong(offset + 3) // time
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // count
+            cursor.getLong(offset + 4) // time
         );
         return entity;
     }
@@ -116,7 +129,8 @@ public class DataBeanDao extends AbstractDao<DataBean, Long> {
         entity.setBarcode(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
         entity.setWeight(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setTiji(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setTime(cursor.getLong(offset + 3));
+        entity.setCount(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setTime(cursor.getLong(offset + 4));
      }
     
     @Override

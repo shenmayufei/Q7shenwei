@@ -125,4 +125,5 @@
     <string name="clicked_on_the_volume">Clicked on the volume</string>
     <string name="clicked_on_the_photo">Clicked on the photo</string>
     <string name="please_enter">Please enter your username and password</string>
+    <string name="user_name_password">User name password error, please re-enter</string>
 </resources>

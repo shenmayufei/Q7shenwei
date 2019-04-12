@@ -126,4 +126,5 @@
     <string name="clicked_on_the_volume">点击了体积</string>
     <string name="clicked_on_the_photo">点击了拍照</string>
     <string name="please_enter">请输入用户名及密码</string>
+    <string name="user_name_password">用户名密码错误，请重新输入</string>
 </resources>

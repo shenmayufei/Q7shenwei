@@ -24,7 +24,7 @@
         android:id="@+id/data_two"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="5"
+        android:layout_weight="4"
         android:gravity="center"
         android:text="2019/09/09 18:52:44"
         android:textSize="@dimen/sp23" />
@@ -33,7 +33,7 @@
         android:id="@+id/data_three"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:layout_weight="4"
         android:gravity="center"
         android:text="111222222222"
         android:textSize="@dimen/sp23" />
@@ -55,6 +55,15 @@
         android:gravity="center"
         android:text="1111.33"
         android:textSize="@dimen/sp23" />
+
+        <TextView
+            android:id="@+id/data_six"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:text="1"
+            android:textSize="@dimen/sp23" />
 
     </LinearLayout>
 

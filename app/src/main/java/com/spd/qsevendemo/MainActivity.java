@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.media.AudioManager;
@@ -31,10 +30,7 @@ import com.hjimi.api.iminect.ImiFrameMode;
 import com.hjimi.api.iminect.ImiNect;
 import com.hjimi.api.iminect.ImiPixelFormat;
 import com.hjimi.api.iminect.ImiPropertIds;
-import com.imi.sdk.base.BufferedMat;
 import com.imi.sdk.base.CameraIntrinsics;
-import com.imi.sdk.base.Mat;
-import com.imi.sdk.base.MatUtil;
 import com.imi.sdk.volume.BoxSize;
 import com.imi.sdk.volume.BoxState;
 import com.imi.sdk.volume.Plane;
@@ -56,7 +52,6 @@ import com.spd.qsevendemo.model.SevenBean;
 import com.spd.qsevendemo.utils.Logcat;
 import com.spd.qsevendemo.utils.SpUtils;
 import com.spd.qsevendemo.utils.ToastUtils;
-import com.spd.qsevendemo.utils.Utils;
 import com.spd.qsevendemo.view.EndWindow;
 import com.spd.qsevendemo.view.TijiShow;
 import com.spd.qsevendemo.view.WorklistShow;
@@ -95,6 +90,7 @@ import static com.spd.qsevendemo.model.SevenModel.POWERON;
 import static com.spd.qsevendemo.model.SevenModel.SCAN_SET;
 import static com.spd.qsevendemo.model.SevenModel.WEIGHT;
 import static com.spd.qsevendemo.model.SevenModel.WEIGHT_SET;
+import static com.spd.qsevendemo.model.SevenModel.WEIGHT_STABLE;
 import static com.spd.qsevendemo.model.SevenModel.ZERO;
 import static com.spd.qsevendemo.utils.HnweUtils.SD_PROP_C128_ENABLED;
 import static com.spd.qsevendemo.utils.HnweUtils.SD_PROP_C39_ENABLED;
@@ -114,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
      */
     private ImageView mImageView;
     private List<SevenBean> mList;
-    private List<DataBean> mDataList;
 
     /**
      * 下方三块数据依次排列
@@ -144,9 +139,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         initLibz();
         openWeight();
 
-        initPermission();
-        initTijiView();
-
+        //神威不需要体积
+//        initPermission();
+//        initTijiView();
+        SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, false);
         initButtons();
     }
 
@@ -173,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     private void initView() {
         mList = new ArrayList<>();
-        mDataList = new ArrayList<>();
+
         mImageView = findViewById(R.id.title_settings);
 
         mOneCamera = findViewById(R.id.title_camera_state);
@@ -182,9 +178,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
         mThreeNumber.setOnClickListener(v -> {
             if ("0.0".equals(mWeight.getShow())) {
-
-                DatabaseAction.saveData(mDataList);
-
                 startActivity(new Intent(MainActivity.this, DataActivity.class));
             } else {
                 ToastUtils.showShortToastSafe(R.string.please);
@@ -406,15 +399,15 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             weightInterface.releaseWeightDev();
         }
         //体积测量
-        if (mCalThread != null) {
-            mCalThread.onDestroy();
-        }
-
-        fixedThreadPool.shutdownNow();
-        mImiDevice.close();
-        mImiDevice = null;
-        ImiDevice.destroy();
-        ImiNect.destroy();
+//        if (mCalThread != null) {
+//            mCalThread.onDestroy();
+//        }
+//
+//        fixedThreadPool.shutdownNow();
+//        mImiDevice.close();
+//        mImiDevice = null;
+//        ImiDevice.destroy();
+//        ImiNect.destroy();
         releaseWakeLock();
         //称重等
         try {
@@ -597,9 +590,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                     resary = com.spd.code.CodeUtils.GetResultSD();
 
                     if (resary != null) {
-                        if (soundPool != null) {
+                        if (soundPool != null && (boolean) SpUtils.get(AppSeven.getInstance(), WEIGHT_STABLE, false)) {
                             soundPool.play(soundId, 1, 1, 0, 0, 1);
-
+                        } else {
+                            return;
                         }
                         int i = 0;
                         for (byte[] x : resary) {
@@ -612,6 +606,23 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                                 i++;
                                 count++;
                                 mThreeNumber.setText(String.valueOf(count));
+
+                                //和上一条不一样时，保存。先本地保存一条数据
+                                if (!str.equals(barcode)) {
+                                    DataBean dataBean = new DataBean();
+                                    dataBean.setTiji("");
+                                    dataBean.setBarcode(str);
+                                    dataBean.setWeight(mWeight.getShow());
+                                    dataBean.setTime(System.currentTimeMillis());
+                                    //默认件数为1
+                                    dataBean.setCount("1");
+                                    DatabaseAction.saveData(dataBean);
+
+                                    barcode = str;
+                                }
+
+
+
 
                                 //条码触发体积测量
 //                                if (!barcode.equals(str)) {
@@ -749,6 +760,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                 case 0:
                     //秤的状态
                     mTwoScale.setText(getString(R.string.Electronic_scale_disconnected));
+                    SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, false);
                     break;
                 case 1:
                     //变化中的称重
@@ -760,6 +772,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                             mWeight.setShow(weight + "");
                             mVolume.setShow("0.0000");
                             mVolume.setTiji("a:0.0cm;  b:0.0cm;  h:0.0cm");
+                            SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, false);
                         }
                     } else {
                         if ((boolean) SpUtils.get(AppSeven.getInstance(), WEIGHT_SET, true)) {
@@ -767,10 +780,11 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                             mWeight.setShow(weight + "");
                         }
                         if ((weight - mLastWeight > 0.02) || (weight - mLastWeight < -0.02) || first) {
+                            SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, true);
                             //触发体积测量
-                            if (show) {
-                                initScanTime();
-                            }
+//                            if (show) {
+//                                initScanTime();
+//                            }
                             mLastWeight = weight;
                         }
                     }
@@ -786,6 +800,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                             mWeight.setShow(weight + "");
                             mVolume.setShow("0.0000");
                             mVolume.setTiji("a:0.0cm;  b:0.0cm;  h:0.0cm");
+                            SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, false);
                         }
                     } else {
                         if ((boolean) SpUtils.get(AppSeven.getInstance(), WEIGHT_SET, true)) {
@@ -793,10 +808,11 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                             mWeight.setShow(weight + "");
                         }
                         if ((weight - mLastWeight > 0.02) || (weight - mLastWeight < -0.02) || first) {
+                            SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, true);
                             //触发体积测量
-                            if (show) {
-                                initScanTime();
-                            }
+//                            if (show) {
+//                                initScanTime();
+//                            }
                             mLastWeight = weight;
                         }
                     }
@@ -816,10 +832,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         mWeight.setShow("0.00");
         openWeight();
         //体积
-        if (mCalThread != null) {
-            mGLCal.onResume();
-            mCalThread.onResume();
-        }
+//        if (mCalThread != null) {
+//            mGLCal.onResume();
+//            mCalThread.onResume();
+//        }
     }
 
     @Override
@@ -875,21 +891,21 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
             case HEIGHT_CALIBRATION:
                 //体积测量的高度校准
-                if (!mHeightDialog.isAdded()) {
-                    mHeightDialog.setTitle(getString(R.string.Current_height1)).setContent(mPlane == null ? "" : getString(R.string.Current_height2) + new DecimalFormat("0.0000").format(Math.abs(mPlane.getHigh() * 100)) + "cm").setProgressVisible(false).show(getFragmentManager(), "height");
-                }
-                upDateHeightDialog(Type);
+//                if (!mHeightDialog.isAdded()) {
+//                    mHeightDialog.setTitle(getString(R.string.Current_height1)).setContent(mPlane == null ? "" : getString(R.string.Current_height2) + new DecimalFormat("0.0000").format(Math.abs(mPlane.getHigh() * 100)) + "cm").setProgressVisible(false).show(getFragmentManager(), "height");
+//                }
+//                upDateHeightDialog(Type);
                 break;
 
             case HEIGHT_INIT:
                 //体积相关部分
-                initPermission();
-                initTijiView();
+//                initPermission();
+//                initTijiView();
                 break;
 
             case PHOTO_SHOOT:
-                Bitmap bmp = MatUtil.toBitmap(BufferedMat.create(480, 640, Mat.Type.CV_8UC3, mCalThread.getRGBBuffer()));
-                Utils.saveImage(bmp);
+//                Bitmap bmp = MatUtil.toBitmap(BufferedMat.create(480, 640, Mat.Type.CV_8UC3, mCalThread.getRGBBuffer()));
+//                Utils.saveImage(bmp);
                 break;
 
             default:
