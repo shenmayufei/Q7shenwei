@@ -48,20 +48,36 @@
             android:layout_weight="1"
             android:layout_height="wrap_content">
 
-            <com.spd.qsevendemo.measure.view.GLPanel
-                android:id="@+id/gl_main_cal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <ImageView
-                android:id="@+id/iv_main_camera"
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/dp2"
+                android:id="@+id/ll_shenwei"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="160dp"
-                android:layout_marginEnd="35dp"
-                android:layout_marginStart="35dp"
-                android:layout_marginBottom="30dp"
-                android:src="@mipmap/iv_main_camera" />
+                >
+
+                <com.spd.qsevendemo.view.JianshuShow
+                    android:id="@+id/shenwei_one"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/dp2"
+                    android:layout_weight="1" />
+
+                <com.spd.qsevendemo.view.WorklistShow
+                    android:id="@+id/shenwei_two"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/dp2"
+                    android:layout_weight="1" />
+
+                <com.spd.qsevendemo.view.WorklistShow
+                    android:id="@+id/shenwei_three"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_margin="@dimen/dp2"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 

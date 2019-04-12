@@ -53,6 +53,7 @@ import com.spd.qsevendemo.utils.Logcat;
 import com.spd.qsevendemo.utils.SpUtils;
 import com.spd.qsevendemo.utils.ToastUtils;
 import com.spd.qsevendemo.view.EndWindow;
+import com.spd.qsevendemo.view.JianshuShow;
 import com.spd.qsevendemo.view.TijiShow;
 import com.spd.qsevendemo.view.WorklistShow;
 import com.spd.qsevendemo.weight.WeightEvent;
@@ -125,6 +126,13 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private TextView mThreeNumber;
     private int count = 0;
 
+    /**
+     * 中间三块数据依次排列
+     */
+    private JianshuShow mJianshu;
+    private WorklistShow mLiebiao;
+    private WorklistShow mShangchuan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,9 +150,12 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         //神威不需要体积
 //        initPermission();
 //        initTijiView();
+        setShenweiShows();
         SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, false);
         initButtons();
     }
+
+
 
     private void initButtons() {
         mWeight.setOnClickListener(v -> {
@@ -152,6 +163,22 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             mWeight.setBackground(true);
             mWeight.setShow("0.00");
         });
+
+        mLiebiao.setOnClickListener(v -> {
+            if ("0.0".equals(mWeight.getShow())) {
+                startActivity(new Intent(MainActivity.this, DataActivity.class));
+            } else {
+                ToastUtils.showShortToastSafe(R.string.please);
+            }
+        });
+
+        mShangchuan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToastUtils.showShortToastSafe("点击了手动上传数据");
+            }
+        });
+
     }
 
 
@@ -188,6 +215,11 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         mVolume = findViewById(R.id.work_two);
         mCode = findViewById(R.id.work_three);
 
+        //中间三个，件数、列表、上传
+        mJianshu = findViewById(R.id.shenwei_one);
+        mLiebiao = findViewById(R.id.shenwei_two);
+        mShangchuan = findViewById(R.id.shenwei_three);
+
         mImageView.setOnClickListener(v -> new EndWindow(MainActivity.this, mList).showAtLocation(mImageView, Gravity.START, 0, 0));
 
 
@@ -223,6 +255,20 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         mCode.setShow("");
         mCode.setUnit("");
 
+    }
+
+    private void setShenweiShows() {
+        mJianshu.setTotalName("设置件数");
+        mJianshu.setShow("1");
+        mJianshu.setUnit("");
+
+        mLiebiao.setTotalName("数据列表");
+        mLiebiao.setShow("查看已保存数据");
+        mLiebiao.setUnit("");
+
+        mShangchuan.setTotalName("上传");
+        mShangchuan.setShow("手动上传数据");
+        mShangchuan.setUnit("");
     }
 
     private List<SevenBean> getSevenList() {
