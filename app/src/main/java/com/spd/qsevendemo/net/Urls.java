@@ -1,11 +1,11 @@
 package com.spd.qsevendemo.net;
 
 public class Urls {
-    public static final String BASE_URL = "http://mdm.speedata.cn:8082/apk/";
+    public static final String BASE_URL = "http://111.67.197.59:9527/api/";
 
     /**
-     * 检测新版本
+     * 神威数据上传
      */
-    static final String UPDATE2 = "apkUpdate";
+    static final String UPLOAD = "Balance";
 
 }

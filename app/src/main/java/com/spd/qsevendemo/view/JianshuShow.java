@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,7 +16,7 @@ import com.spd.qsevendemo.R;
 public class JianshuShow extends LinearLayout {
 
     private TextView mTotalName;
-    private EditText mShow;
+    private TextView mShow;
     private TextView mUnit;
     private LinearLayout mlayout;
 

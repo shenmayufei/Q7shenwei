@@ -1,10 +1,12 @@
 package com.spd.qsevendemo.net;
 
-import java.util.Map;
+import com.spd.qsevendemo.bean.BalanceResult;
+
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -45,10 +47,8 @@ public class NetApi {
     }
 
 
-    /**
-     * 更新
-     */
-    public Observable<UpdateResult> checkUpdate2(Map<String, String> versionNumber) {
-        return service.checkUpdate2(versionNumber);
+
+    public Observable<BalanceResult> login(RequestBody balanceBean) {
+        return service.upload(balanceBean);
     }
 }

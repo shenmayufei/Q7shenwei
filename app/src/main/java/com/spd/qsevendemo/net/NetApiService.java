@@ -1,20 +1,20 @@
 package com.spd.qsevendemo.net;
 
-import java.util.Map;
+import com.spd.qsevendemo.bean.BalanceResult;
 
 import io.reactivex.Observable;
-import retrofit2.http.FieldMap;
-import retrofit2.http.FormUrlEncoded;
+import okhttp3.RequestBody;
+import retrofit2.http.Body;
 import retrofit2.http.POST;
 
 public interface NetApiService {
 
     /**
-     * 检测更新
+     * 上传
      *
-     * @return @return {@link UpdateResult}
+     * @param balanceBean 上传的json字符串
+     * @return 上传结果
      */
-    @POST(Urls.UPDATE2)
-    @FormUrlEncoded
-    Observable<UpdateResult> checkUpdate2(@FieldMap Map<String, String> versionNumber);
+    @POST(Urls.UPLOAD)
+    Observable<BalanceResult> upload(@Body RequestBody balanceBean);
 }

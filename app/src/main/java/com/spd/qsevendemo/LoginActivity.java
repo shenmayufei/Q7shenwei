@@ -8,18 +8,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.spd.qsevendemo.model.LoginModel;
-import com.spd.qsevendemo.net.NetApi;
-import com.spd.qsevendemo.net.UpdateResult;
 import com.spd.qsevendemo.utils.Logcat;
 import com.spd.qsevendemo.utils.SpUtils;
 import com.spd.qsevendemo.utils.ToastUtils;
 
 import java.util.HashMap;
-
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 import static com.spd.qsevendemo.model.LoginModel.LOGIN_IS_MANAGER;
 
@@ -65,29 +58,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         params.put("versionNumber", code);
         params.put("apkName", name);
 
-        NetApi.getInstance().checkUpdate2(params).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<UpdateResult>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-            }
-
-            @Override
-            public void onNext(UpdateResult updateResult) {
-                if (updateResult.isSuccess()){
-                    //成功返回结果
-                }
-                Logcat.d("updateResult.isSuccess()");
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Logcat.d(e.getMessage());
-            }
-
-            @Override
-            public void onComplete() {
-            }
-        });
+//        NetApi.getInstance().checkUpdate2(params).subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<UpdateResult>() {
+//            @Override
+//            public void onSubscribe(Disposable d) {
+//            }
+//
+//            @Override
+//            public void onNext(UpdateResult updateResult) {
+//                if (updateResult.isSuccess()){
+//                    //成功返回结果
+//                }
+//                Logcat.d("updateResult.isSuccess()");
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//                Logcat.d(e.getMessage());
+//            }
+//
+//            @Override
+//            public void onComplete() {
+//            }
+//        });
     }
 
     @Override

@@ -35,6 +35,8 @@ import com.imi.sdk.volume.BoxSize;
 import com.imi.sdk.volume.BoxState;
 import com.imi.sdk.volume.Plane;
 import com.socks.library.KLog;
+import com.spd.qsevendemo.bean.BalanceBean;
+import com.spd.qsevendemo.bean.BalanceResult;
 import com.spd.qsevendemo.measure.CalThread;
 import com.spd.qsevendemo.measure.Constants;
 import com.spd.qsevendemo.measure.MeasureListener;
@@ -49,6 +51,7 @@ import com.spd.qsevendemo.measure.view.MessageDialog;
 import com.spd.qsevendemo.model.DataBean;
 import com.spd.qsevendemo.model.DatabaseAction;
 import com.spd.qsevendemo.model.SevenBean;
+import com.spd.qsevendemo.net.NetApi;
 import com.spd.qsevendemo.utils.Logcat;
 import com.spd.qsevendemo.utils.SpUtils;
 import com.spd.qsevendemo.utils.ToastUtils;
@@ -78,9 +81,17 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+
 import static com.hjimi.api.iminect.ImiPropertIds.IMI_PROPERTY_DEPTH_MIRROR;
 import static com.hjimi.api.iminect.ImiPropertIds.IMI_PROPERTY_IMAGE_MIRROR;
 import static com.spd.code.CodeUtils.UnloadSD;
+import static com.spd.qsevendemo.model.LoginModel.LOGIN_IS_MANAGER;
 import static com.spd.qsevendemo.model.SevenModel.HEIGHT_CALIBRATION;
 import static com.spd.qsevendemo.model.SevenModel.HEIGHT_INIT;
 import static com.spd.qsevendemo.model.SevenModel.HEIGHT_SET;
@@ -89,6 +100,7 @@ import static com.spd.qsevendemo.model.SevenModel.PHOTO_SHOOT;
 import static com.spd.qsevendemo.model.SevenModel.POWEROFF;
 import static com.spd.qsevendemo.model.SevenModel.POWERON;
 import static com.spd.qsevendemo.model.SevenModel.SCAN_SET;
+import static com.spd.qsevendemo.model.SevenModel.UPLOAD_DATA;
 import static com.spd.qsevendemo.model.SevenModel.WEIGHT;
 import static com.spd.qsevendemo.model.SevenModel.WEIGHT_SET;
 import static com.spd.qsevendemo.model.SevenModel.WEIGHT_STABLE;
@@ -133,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private WorklistShow mLiebiao;
     private WorklistShow mShangchuan;
 
+    private BalanceBean mBalanceBean;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,13 +162,12 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         openWeight();
 
         //神威不需要体积
-//        initPermission();
+        initPermission();
 //        initTijiView();
         setShenweiShows();
         SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, false);
         initButtons();
     }
-
 
 
     private void initButtons() {
@@ -175,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         mShangchuan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.showShortToastSafe("点击了手动上传数据");
+                EventBus.getDefault().postSticky(new WeightEvent(UPLOAD_DATA, ""));
             }
         });
 
@@ -196,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     private void initView() {
         mList = new ArrayList<>();
-
+        mBalanceBean = new BalanceBean();
         mImageView = findViewById(R.id.title_settings);
 
         mOneCamera = findViewById(R.id.title_camera_state);
@@ -258,12 +271,12 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     }
 
     private void setShenweiShows() {
-        mJianshu.setTotalName("设置件数");
+        mJianshu.setTotalName("件数");
         mJianshu.setShow("1");
         mJianshu.setUnit("");
 
         mLiebiao.setTotalName("数据列表");
-        mLiebiao.setShow("查看已保存数据");
+        mLiebiao.setShow("查看数据列表");
         mLiebiao.setUnit("");
 
         mShangchuan.setTotalName("上传");
@@ -440,6 +453,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     @Override
     protected void onDestroy() {
+
+        com.spd.code.CodeUtils.SD_Loaded = false;
+        UnloadSD();
+
         //称重
         if (flag == 1) {
             weightInterface.releaseWeightDev();
@@ -471,8 +488,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
         mCallback = null;
         soundPool.release();
-        com.spd.code.CodeUtils.SD_Loaded = false;
-        UnloadSD();
         super.onDestroy();
     }
 
@@ -620,33 +635,37 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private Camera.PreviewCallback mCallback = (new Camera.PreviewCallback() {
         @Override
         public void onPreviewFrame(byte[] data, Camera camera) {
+
             if (!isdecode) {
                 isdecode = true;
 
                 //添加扫描判断
                 if (!(boolean) SpUtils.get(AppSeven.getInstance(), SCAN_SET, true)) {
+                    isdecode = false;
                     return;
                 }
 
                 if (com.spd.code.CodeUtils.DecodeImageSD(data, g_w, g_h) == 0) {
-
-                    Logcat.d("jk", "jk decode failed");
+                    Logcat.d("jk decode failed");
                 } else {
+
                     byte[][] resary;
                     resary = com.spd.code.CodeUtils.GetResultSD();
 
                     if (resary != null) {
+
                         if (soundPool != null && (boolean) SpUtils.get(AppSeven.getInstance(), WEIGHT_STABLE, false)) {
                             soundPool.play(soundId, 1, 1, 0, 0, 1);
                         } else {
+                            isdecode = false;
                             return;
                         }
                         int i = 0;
+
                         for (byte[] x : resary) {
-                            Logcat.d("jk", "jk length of x is " + x.length);
+
                             String str = new String(x);
                             if (!"".equalsIgnoreCase(str)) {
-
                                 mCode.setShow(str);
                                 Logcat.d("jk", "jk result " + i + " : " + str);
                                 i++;
@@ -654,7 +673,26 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                                 mThreeNumber.setText(String.valueOf(count));
 
                                 //和上一条不一样时，保存。先本地保存一条数据
+
+                                if (!str.equals(barcode) && (boolean)SpUtils.get(AppSeven.getInstance(), LOGIN_IS_MANAGER, false)) {
+                                    //网络上传数据,先拼装数据
+                                    List<String> mList3 = new ArrayList<>();
+                                    BalanceBean balanceBean = new BalanceBean();
+                                    balanceBean.setWeight(mWeight.getShow());
+                                    balanceBean.setVolume(0);
+                                    balanceBean.setPcs(1);
+                                    balanceBean.setRequestType("1");
+                                    balanceBean.setScanTime(String.valueOf(System.currentTimeMillis()));
+                                    mList3.add(str);
+                                    balanceBean.setQrCodes(mList3);
+                                    //上传
+                                    mBalanceBean = balanceBean;
+
+                                    EventBus.getDefault().postSticky(new WeightEvent(UPLOAD_DATA, ""));
+                                }
+
                                 if (!str.equals(barcode)) {
+                                    barcode = str;
                                     DataBean dataBean = new DataBean();
                                     dataBean.setTiji("");
                                     dataBean.setBarcode(str);
@@ -663,11 +701,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                                     //默认件数为1
                                     dataBean.setCount("1");
                                     DatabaseAction.saveData(dataBean);
-
-                                    barcode = str;
                                 }
-
-
 
 
                                 //条码触发体积测量
@@ -691,6 +725,42 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             }
         }
     });
+
+    private void upload(BalanceBean balanceBean) {
+
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), balanceBean.toString());
+
+        NetApi.getInstance().login(requestBody).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<BalanceResult>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(BalanceResult result) {
+                if (result.getFalseCount() == 0) {
+                    Logcat.d("上传成功");
+                    ToastUtils.showShortToastSafe("上传成功");
+                } else {
+                    Logcat.d("上传了");
+                    ToastUtils.showShortToastSafe(result.getFalseMsgs().get(0).getCustomerAndQrCode() + result.getFalseMsgs().get(0).getMsg());
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                ToastUtils.showShortToastSafe(e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
+
+    }
 
     private BarcodeDrawView drawView;
     private List<BarcodeBounds> mList2;
@@ -952,6 +1022,16 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             case PHOTO_SHOOT:
 //                Bitmap bmp = MatUtil.toBitmap(BufferedMat.create(480, 640, Mat.Type.CV_8UC3, mCalThread.getRGBBuffer()));
 //                Utils.saveImage(bmp);
+                break;
+
+            case UPLOAD_DATA:
+                if (mBalanceBean == null) {
+                    ToastUtils.showShortToastSafe("没有可上传的数据");
+                } else if (!(boolean)SpUtils.get(AppSeven.getInstance(), LOGIN_IS_MANAGER, false)) {
+                    ToastUtils.showShortToastSafe("当前登录状态不可上传数据");
+                } else {
+                    upload(mBalanceBean);
+                }
                 break;
 
             default:

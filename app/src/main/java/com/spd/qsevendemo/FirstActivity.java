@@ -36,9 +36,9 @@ public class FirstActivity extends AppCompatActivity {
     private void initDevice() {
         try {
             deviceControl = new DeviceControlSpd(DeviceControlSpd.POWER_NEWMAIN);
-            deviceControl.newSetGpioOn(21);
-            deviceControl.newSetGpioOn(57);
-            deviceControl.newSetGpioOn(16);
+            //deviceControl.newSetGpioOn(21);
+            //deviceControl.newSetGpioOn(57);
+            //deviceControl.newSetGpioOn(16);
             deviceControl.newSetGpioOn(14);
             deviceControl.newSetGpioOn(89);
         } catch (IOException e) {

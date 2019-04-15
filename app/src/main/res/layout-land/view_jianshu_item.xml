@@ -41,23 +41,23 @@
 
         <LinearLayout
             android:id="@+id/mywork_ll_one"
-            android:layout_width="266dp"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-            <EditText
+            <TextView
                 android:id="@+id/worklist_two_jianshu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="@dimen/dp2"
                 android:gravity="end"
-                android:padding="@dimen/dp5"
+                android:padding="@dimen/dp2"
                 android:text="1"
                 android:textColor="@color/white"
-                android:textSize="35sp" />
+                android:textSize="34sp" />
 
         </LinearLayout>
 

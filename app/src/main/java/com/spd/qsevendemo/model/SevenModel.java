@@ -29,4 +29,7 @@ public class SevenModel {
 
     //称重是否稳定
     public static final String WEIGHT_STABLE = "WEIGHT_STABLE";
+
+    //上传最近一次数据
+    public static final String UPLOAD_DATA = "UPLOAD_DATA";
 }

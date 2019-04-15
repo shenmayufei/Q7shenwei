@@ -3,6 +3,8 @@ package com.spd.qsevendemo.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 /**
@@ -22,9 +24,15 @@ public class BalanceBean implements Parcelable {
     private String RequestType;
     private String ScanTime;
     private int Pcs;
-    private int Weight;
+    private String Weight;
     private int Volume;
     private List<String> QrCodes;
+
+
+    @Override
+    public String toString() {
+        return new Gson().toJson("[" + this + "]");
+    }
 
     public String getRequestType() {
         return RequestType;
@@ -50,11 +58,11 @@ public class BalanceBean implements Parcelable {
         this.Pcs = Pcs;
     }
 
-    public int getWeight() {
+    public String getWeight() {
         return Weight;
     }
 
-    public void setWeight(int Weight) {
+    public void setWeight(String Weight) {
         this.Weight = Weight;
     }
 
@@ -84,7 +92,7 @@ public class BalanceBean implements Parcelable {
         dest.writeString(this.RequestType);
         dest.writeString(this.ScanTime);
         dest.writeInt(this.Pcs);
-        dest.writeInt(this.Weight);
+        dest.writeString(this.Weight);
         dest.writeInt(this.Volume);
         dest.writeStringList(this.QrCodes);
     }
@@ -96,7 +104,7 @@ public class BalanceBean implements Parcelable {
         this.RequestType = in.readString();
         this.ScanTime = in.readString();
         this.Pcs = in.readInt();
-        this.Weight = in.readInt();
+        this.Weight = in.readString();
         this.Volume = in.readInt();
         this.QrCodes = in.createStringArrayList();
     }
