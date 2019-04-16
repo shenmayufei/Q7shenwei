@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +32,9 @@ public class BalanceBean implements Parcelable {
 
     @Override
     public String toString() {
-        return new Gson().toJson("[" + this + "]");
+        List<BalanceBean> mList = new ArrayList<>();
+        mList.add(this);
+        return new Gson().toJson(mList);
     }
 
     public String getRequestType() {

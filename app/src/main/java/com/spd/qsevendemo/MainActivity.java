@@ -688,8 +688,8 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                                     mList3.add(str);
                                     balanceBean.setQrCodes(mList3);
                                     //上传
+                                    mBalanceBean = new BalanceBean();
                                     mBalanceBean = balanceBean;
-
                                     EventBus.getDefault().postSticky(new UploadEvent(UPLOAD_DATA));
                                 }
 
@@ -732,7 +732,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json"), balanceBean.toString());
 
-        NetApi.getInstance().login(requestBody).subscribeOn(Schedulers.io())
+        NetApi.getInstance().upload(requestBody).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<BalanceResult>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -1046,7 +1046,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                 } else if (!(boolean) SpUtils.get(AppSeven.getInstance(), LOGIN_IS_MANAGER, false)) {
                     ToastUtils.showShortToastSafe("当前登录状态不可上传数据");
                 } else {
-                    ToastUtils.showShortToastSafe("上传ing");
+                    ToastUtils.showShortToastSafe("上传中...");
                     upload(mBalanceBean);
                 }
                 break;

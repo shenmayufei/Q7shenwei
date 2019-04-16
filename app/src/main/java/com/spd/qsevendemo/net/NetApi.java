@@ -48,7 +48,7 @@ public class NetApi {
 
 
 
-    public Observable<BalanceResult> login(RequestBody balanceBean) {
+    public Observable<BalanceResult> upload(RequestBody balanceBean) {
         return service.upload(balanceBean);
     }
 }
