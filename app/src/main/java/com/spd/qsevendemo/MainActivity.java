@@ -59,10 +59,12 @@ import com.spd.qsevendemo.view.EndWindow;
 import com.spd.qsevendemo.view.JianshuShow;
 import com.spd.qsevendemo.view.TijiShow;
 import com.spd.qsevendemo.view.WorklistShow;
+import com.spd.qsevendemo.weight.UploadEvent;
 import com.spd.qsevendemo.weight.WeightEvent;
 import com.spd.qsevendemo.weight.WeightInterface;
 import com.spd.qsevendemo.weight.WeightRealize;
 import com.speedata.libutils.DataConversionUtils;
+import com.speedata.utils.ProgressDialogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -188,7 +190,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         mShangchuan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().postSticky(new WeightEvent(UPLOAD_DATA, ""));
+                EventBus.getDefault().postSticky(new UploadEvent(UPLOAD_DATA));
             }
         });
 
@@ -453,7 +455,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     @Override
     protected void onDestroy() {
-
+        ProgressDialogUtils.dismissProgressDialog();
         com.spd.code.CodeUtils.SD_Loaded = false;
         UnloadSD();
 
@@ -674,7 +676,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
                                 //和上一条不一样时，保存。先本地保存一条数据
 
-                                if (!str.equals(barcode) && (boolean)SpUtils.get(AppSeven.getInstance(), LOGIN_IS_MANAGER, false)) {
+                                if (!str.equals(barcode) && (boolean) SpUtils.get(AppSeven.getInstance(), LOGIN_IS_MANAGER, false)) {
                                     //网络上传数据,先拼装数据
                                     List<String> mList3 = new ArrayList<>();
                                     BalanceBean balanceBean = new BalanceBean();
@@ -688,7 +690,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                                     //上传
                                     mBalanceBean = balanceBean;
 
-                                    EventBus.getDefault().postSticky(new WeightEvent(UPLOAD_DATA, ""));
+                                    EventBus.getDefault().postSticky(new UploadEvent(UPLOAD_DATA));
                                 }
 
                                 if (!str.equals(barcode)) {
@@ -741,15 +743,14 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             public void onNext(BalanceResult result) {
                 if (result.getFalseCount() == 0) {
                     Logcat.d("上传成功");
-                    ToastUtils.showShortToastSafe("上传成功");
                 } else {
-                    Logcat.d("上传了");
-                    ToastUtils.showShortToastSafe(result.getFalseMsgs().get(0).getCustomerAndQrCode() + result.getFalseMsgs().get(0).getMsg());
+                    Logcat.d(result.getFalseMsgs().get(0).getCustomerAndQrCode() + result.getFalseMsgs().get(0).getMsg());
                 }
             }
 
             @Override
             public void onError(Throwable e) {
+                Logcat.d(e.getMessage());
                 ToastUtils.showShortToastSafe(e.getMessage());
             }
 
@@ -758,8 +759,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
             }
         });
-
-
     }
 
     private BarcodeDrawView drawView;
@@ -959,6 +958,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         if (flag == 1) {
             weightInterface.releaseWeightDev();
         }
+        ProgressDialogUtils.dismissProgressDialog();
         super.onPause();
     }
 
@@ -1024,12 +1024,29 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 //                Utils.saveImage(bmp);
                 break;
 
+            default:
+                break;
+        }
+    }
+
+
+    /**
+     * 接收事件，1.激活成功开始初始化
+     *
+     * @param event event
+     */
+
+    @SuppressLint("WrongConstant")
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onEvent2(UploadEvent event) {
+        switch (event.getMessage()) {
             case UPLOAD_DATA:
                 if (mBalanceBean == null) {
                     ToastUtils.showShortToastSafe("没有可上传的数据");
-                } else if (!(boolean)SpUtils.get(AppSeven.getInstance(), LOGIN_IS_MANAGER, false)) {
+                } else if (!(boolean) SpUtils.get(AppSeven.getInstance(), LOGIN_IS_MANAGER, false)) {
                     ToastUtils.showShortToastSafe("当前登录状态不可上传数据");
                 } else {
+                    ToastUtils.showShortToastSafe("上传ing");
                     upload(mBalanceBean);
                 }
                 break;
