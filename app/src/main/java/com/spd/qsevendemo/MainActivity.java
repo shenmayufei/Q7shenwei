@@ -690,6 +690,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                                     //上传
                                     mBalanceBean = new BalanceBean();
                                     mBalanceBean = balanceBean;
+                                    Logcat.d(mBalanceBean.toString());
                                     EventBus.getDefault().postSticky(new UploadEvent(UPLOAD_DATA));
                                 }
 
@@ -859,7 +860,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
 
     /**
-     * 下面是称重部分，主要方法位置区别于扫描
+     * ===================================下面是称重部分，主要方法位置区别于扫描===========================================
      * <p>
      * 整合于weightActivity源码
      */
@@ -1044,7 +1045,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                 if (mBalanceBean == null) {
                     ToastUtils.showShortToastSafe("没有可上传的数据");
                 } else if (!(boolean) SpUtils.get(AppSeven.getInstance(), LOGIN_IS_MANAGER, false)) {
-                    ToastUtils.showShortToastSafe("当前登录状态不可上传数据");
+                    ToastUtils.showShortToastSafe("直接登录不可上传数据");
                 } else {
                     ToastUtils.showShortToastSafe("上传中...");
                     upload(mBalanceBean);
@@ -1058,7 +1059,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
 
     /**
-     * 测体积相关部分源码
+     * ======================================================测体积相关部分源码=====================================================
      * <p>
      * 实现体积测量功能
      * <p>
