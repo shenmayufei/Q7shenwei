@@ -190,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         mShangchuan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 EventBus.getDefault().postSticky(new UploadEvent(UPLOAD_DATA));
             }
         });
@@ -742,6 +743,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
             @Override
             public void onNext(BalanceResult result) {
+                isupload = false;
                 if (result.getFalseCount() == 0) {
                     Logcat.d("上传成功");
                 } else {
@@ -751,6 +753,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
             @Override
             public void onError(Throwable e) {
+                isupload = false;
                 Logcat.d(e.getMessage());
                 ToastUtils.showShortToastSafe(e.getMessage());
             }
@@ -1030,7 +1033,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         }
     }
 
-
+    private boolean isupload;
     /**
      * 接收事件，1.激活成功开始初始化
      *
@@ -1046,8 +1049,11 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                     ToastUtils.showShortToastSafe("没有可上传的数据");
                 } else if (!(boolean) SpUtils.get(AppSeven.getInstance(), LOGIN_IS_MANAGER, false)) {
                     ToastUtils.showShortToastSafe("直接登录不可上传数据");
+                } else if (isupload) {
+                    ToastUtils.showShortToastSafe("正在上传数据，请重试...");
                 } else {
                     ToastUtils.showShortToastSafe("上传中...");
+                    isupload = true;
                     upload(mBalanceBean);
                 }
                 break;
