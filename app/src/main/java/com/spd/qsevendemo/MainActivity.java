@@ -878,8 +878,8 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             switch (i) {
                 case 0:
                     //秤的状态
-                    mTwoScale.setText(getString(R.string.Electronic_scale_disconnected));
-                    SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, false);
+//                    mTwoScale.setText(getString(R.string.Electronic_scale_disconnected));
+//                    SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, false);
                     break;
                 case 1:
                     //变化中的称重
