@@ -231,8 +231,11 @@ public class WeightRealize implements WeightInterface {
     public void startWeight() {
         try {
             serialPort = new SerialPortSpd();
-            serialPort.OpenSerial("/dev/ttyMT1", 9600);
-            deviceControlSpd = new DeviceControlSpd(DeviceControlSpd.PowerType.NEW_MAIN, 75);
+//            serialPort.OpenSerial("/dev/ttyMT1", 9600);
+//            deviceControlSpd = new DeviceControlSpd(DeviceControlSpd.PowerType.NEW_MAIN, 75);
+            serialPort.OpenSerial("/dev/ttyMT7", 9600);
+//            serialPort.OpenSerial("/dev/ttyXRM1", 9600);
+            deviceControlSpd = new DeviceControlSpd(DeviceControlSpd.PowerType.EXPAND, 18);
             deviceControlSpd.PowerOnDevice();
             fd = serialPort.getFd();
             if (fd == -1) {
