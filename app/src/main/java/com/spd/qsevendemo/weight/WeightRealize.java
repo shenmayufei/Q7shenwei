@@ -235,8 +235,8 @@ public class WeightRealize implements WeightInterface {
 //            deviceControlSpd = new DeviceControlSpd(DeviceControlSpd.PowerType.NEW_MAIN, 75);
             serialPort.OpenSerial("/dev/ttyMT7", 9600);
 //            serialPort.OpenSerial("/dev/ttyXRM1", 9600);
-            deviceControlSpd = new DeviceControlSpd(DeviceControlSpd.PowerType.EXPAND, 18);
-            deviceControlSpd.PowerOnDevice();
+//            deviceControlSpd = new DeviceControlSpd(DeviceControlSpd.PowerType.EXPAND);
+//            deviceControlSpd.PowerOnDevice();
             fd = serialPort.getFd();
             if (fd == -1) {
                 displayWeightDatasListener.WeightStatas(0, 0);
