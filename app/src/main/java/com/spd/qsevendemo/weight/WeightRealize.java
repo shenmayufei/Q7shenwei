@@ -252,11 +252,11 @@ public class WeightRealize implements WeightInterface {
         if (serialPort != null) {
             serialPort.CloseSerial(fd);
         }
-        try {
-            deviceControlSpd.PowerOffDevice();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            deviceControlSpd.PowerOffDevice();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         if (readThread != null) {
             readThread.interrupt();
         }
