@@ -32,4 +32,7 @@ public class SevenModel {
 
     //上传最近一次数据
     public static final String UPLOAD_DATA = "UPLOAD_DATA";
+
+    //上传结果
+    public static final String UPLOAD_RESULT = "UPLOAD_RESULT";
 }

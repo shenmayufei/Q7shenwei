@@ -658,7 +658,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                     if (resary != null) {
 
                         if (soundPool != null && (boolean) SpUtils.get(AppSeven.getInstance(), WEIGHT_STABLE, false)) {
-                            soundPool.play(soundId, 1, 1, 0, 0, 1);
+                            SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, false);
                         } else {
                             isdecode = false;
                             return;
@@ -678,10 +678,11 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                                 //和上一条不一样时，保存。先本地保存一条数据
 
                                 if (!str.equals(barcode) && (boolean) SpUtils.get(AppSeven.getInstance(), LOGIN_IS_MANAGER, false)) {
+
                                     //网络上传数据,先拼装数据
                                     List<String> mList3 = new ArrayList<>();
                                     BalanceBean balanceBean = new BalanceBean();
-                                    balanceBean.setWeight(mWeight.getShow());
+                                    balanceBean.setWeight(String.valueOf(mLastWeight));
                                     balanceBean.setVolume(0);
                                     balanceBean.setPcs(1);
                                     balanceBean.setRequestType("1");
@@ -693,20 +694,22 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                                     mBalanceBean = balanceBean;
                                     Logcat.d(mBalanceBean.toString());
                                     EventBus.getDefault().postSticky(new UploadEvent(UPLOAD_DATA));
+
                                 }
 
                                 if (!str.equals(barcode)) {
+                                    soundPool.play(soundId, 1, 1, 0, 0, 1);
                                     barcode = str;
                                     DataBean dataBean = new DataBean();
                                     dataBean.setTiji("");
                                     dataBean.setBarcode(str);
-                                    dataBean.setWeight(mWeight.getShow());
+                                    dataBean.setWeight(String.valueOf(mLastWeight));
                                     dataBean.setTime(System.currentTimeMillis());
                                     //默认件数为1
                                     dataBean.setCount("1");
                                     DatabaseAction.saveData(dataBean);
-                                }
 
+                                }
 
                                 //条码触发体积测量
 //                                if (!barcode.equals(str)) {
@@ -746,7 +749,9 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                 isupload = false;
                 if (result.getFalseCount() == 0) {
                     Logcat.d("上传成功");
+                    //EventBus.getDefault().postSticky(new WeightEvent(UPLOAD_RESULT, "上传成功"));
                 } else {
+                    //EventBus.getDefault().postSticky(new WeightEvent(UPLOAD_RESULT, result.getFalseMsgs().get(0).getMsg()));
                     Logcat.d(result.getFalseMsgs().get(0).getCustomerAndQrCode() + result.getFalseMsgs().get(0).getMsg());
                 }
             }
@@ -870,9 +875,13 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private WeightInterface weightInterface;
     private int flag = 0;
     private double mLastWeight = 0;
+    private double mLastWeight2 = 0;
     private boolean first = true;
 
+    private List<Double> mWeightList;
+
     private void initLibz() {
+        mWeightList = new ArrayList<>();
         weightInterface = new WeightRealize(AppSeven.getInstance());
         weightInterface.setWeightStatas((i, weight) -> runOnUiThread(() -> {
             switch (i) {
@@ -892,20 +901,31 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                             mVolume.setShow("0.0000");
                             mVolume.setTiji("a:0.0cm;  b:0.0cm;  h:0.0cm");
                             SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, false);
+                            barcode = "";
                         }
                     } else {
                         if ((boolean) SpUtils.get(AppSeven.getInstance(), WEIGHT_SET, true)) {
                             mWeight.setBackground(false);
                             mWeight.setShow(weight + "");
                         }
-                        if ((weight - mLastWeight > 0.02) || (weight - mLastWeight < -0.02) || first) {
-                            SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, true);
+
+                        if ((weight - mLastWeight2 <= 0.02) || (weight - mLastWeight2 >= -0.02) || first) {
+                            mWeightList.add(weight);
+                            int chang = mWeightList.size();
+                            if (mWeightList.size() >= 3) {
+                                if (mWeightList.get(chang - 1).equals(mWeightList.get(chang - 2)) && mWeightList.get(chang - 2).equals(mWeightList.get(chang - 3))) {
+                                    mLastWeight = weight;
+                                    SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, true);
+                                }
+                            }
+
                             //触发体积测量
 //                            if (show) {
 //                                initScanTime();
 //                            }
-                            mLastWeight = weight;
+
                         }
+                        mLastWeight2 = weight;
                     }
 
                     break;
@@ -920,20 +940,30 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                             mVolume.setShow("0.0000");
                             mVolume.setTiji("a:0.0cm;  b:0.0cm;  h:0.0cm");
                             SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, false);
+                            barcode = "";
                         }
                     } else {
                         if ((boolean) SpUtils.get(AppSeven.getInstance(), WEIGHT_SET, true)) {
                             mWeight.setBackground(false);
                             mWeight.setShow(weight + "");
                         }
-                        if ((weight - mLastWeight > 0.02) || (weight - mLastWeight < -0.02) || first) {
-                            SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, true);
+
+                        if ((weight - mLastWeight2 <= 0.02) || (weight - mLastWeight2 >= -0.02) || first) {
+                            mWeightList.add(weight);
+                            int chang = mWeightList.size();
+                            if (mWeightList.size() >= 3) {
+                                if (mWeightList.get(chang - 1).equals(mWeightList.get(chang - 2)) && mWeightList.get(chang - 2).equals(mWeightList.get(chang - 3))) {
+                                    mLastWeight = weight;
+                                    SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, true);
+                                }
+                            }
                             //触发体积测量
 //                            if (show) {
 //                                initScanTime();
 //                            }
-                            mLastWeight = weight;
+
                         }
+                        mLastWeight2 = weight;
                     }
                     break;
                 default:
@@ -1034,6 +1064,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     }
 
     private boolean isupload;
+
     /**
      * 接收事件，1.激活成功开始初始化
      *
@@ -1535,7 +1566,8 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             //创建相应文件夹
             FileUtils.getInstance().init();
