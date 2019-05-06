@@ -96,6 +96,8 @@ public class WeightRealize implements WeightInterface {
             super.run();
             while (!interrupted()) {
                 try {
+                  //  byte[] bytes = serialPort.ReadSerial(fd, 24, 15);
+                    //现天伟优化
                     byte[] bytes = serialPort.ReadSerial(fd, 24, 15);
 //                    Log.e("tests", "run: " + DataConversionUtils.byteArrayToString(bytes));
                     if (bytes != null) {
@@ -161,7 +163,7 @@ public class WeightRealize implements WeightInterface {
             if (queue.size() > 3) {
                 Object[] s = queue.toArray();
                 for (int j = 1; j < s.length; j++) {
-                    if ((double) s[s.length - 1] - (double) s[s.length - j - 1] < 0.02) {//稳定返回
+                    if ((double) s[s.length - 1] - (double) s[s.length - j - 1] < 0.02 && (double) s[s.length - 1] - (double) s[0] < 0.02) {//稳定返回
                         System.out.print((double) s[j] + "dafdafasdfas");
                         displayWeightDatasListener.WeightStatas(1, (double) s[s.length - 1]);
                         queue.poll();

@@ -883,6 +883,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private void initLibz() {
         mWeightList = new ArrayList<>();
         weightInterface = new WeightRealize(AppSeven.getInstance());
+        weightInterface.sendCmd(DataConversionUtils.HexString2Bytes("024171333003"));
         weightInterface.setWeightStatas((i, weight) -> runOnUiThread(() -> {
             switch (i) {
                 case 0:
@@ -891,7 +892,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 //                    SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, false);
                     break;
                 case 1:
-                    //变化中的称重
+                    //较为稳定
                     mTwoScale.setText(getString(R.string.title_weight_state_true));
                     if (weight == 0) {
                         //判断是否输出重量
@@ -912,8 +913,14 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                         if ((weight - mLastWeight2 <= 0.02) || (weight - mLastWeight2 >= -0.02) || first) {
                             mWeightList.add(weight);
                             int chang = mWeightList.size();
-                            if (mWeightList.size() >= 3) {
-                                if (mWeightList.get(chang - 1).equals(mWeightList.get(chang - 2)) && mWeightList.get(chang - 2).equals(mWeightList.get(chang - 3))) {
+                            boolean shuju = true;
+                            if (chang > 3) {
+                                for (int j = chang-1; j > chang - 3; j--) {
+                                    if (!mWeightList.get(j).equals(mWeightList.get(j - 1))) {
+                                        shuju = false;
+                                    }
+                                }
+                                if (shuju && weight > 0.02) {
                                     mLastWeight = weight;
                                     SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, true);
                                 }
@@ -930,7 +937,8 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
                     break;
                 case 2:
-                    //较为稳定的称重
+
+                    //变化中
                     mTwoScale.setText(getString(R.string.title_weight_state_true));
                     if (weight == 0) {
                         //判断是否输出重量
@@ -951,8 +959,14 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                         if ((weight - mLastWeight2 <= 0.02) || (weight - mLastWeight2 >= -0.02) || first) {
                             mWeightList.add(weight);
                             int chang = mWeightList.size();
-                            if (mWeightList.size() >= 3) {
-                                if (mWeightList.get(chang - 1).equals(mWeightList.get(chang - 2)) && mWeightList.get(chang - 2).equals(mWeightList.get(chang - 3))) {
+                            boolean shuju = true;
+                            if (chang > 5) {
+                                for (int j = chang - 1; j > chang - 5; j--) {
+                                    if (!mWeightList.get(j).equals(mWeightList.get(j - 1))) {
+                                        shuju = false;
+                                    }
+                                }
+                                if (shuju && weight > 0.02) {
                                     mLastWeight = weight;
                                     SpUtils.put(AppSeven.getInstance(), WEIGHT_STABLE, true);
                                 }
